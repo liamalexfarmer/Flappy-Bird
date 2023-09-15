@@ -1,5 +1,10 @@
 push = require 'push'
 
+Class = require 'class'
+
+require 'Bird'
+
+
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
@@ -16,6 +21,8 @@ local groundScroll = 0
 local SCROLL_SPEED = 60
 local backgroundscrollSpeed = SCROLL_SPEED/2
 local groundscrollSpeed = SCROLL_SPEED
+
+local bird = Bird()
 
 
 function love.load()
@@ -50,7 +57,11 @@ end
 
 function love.draw()
 	push:start()
+
 	love.graphics.draw(background, -backgroundScroll, 0)
 	love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT-16)
+
+	bird:render()
+
 	push:finish()
 end
