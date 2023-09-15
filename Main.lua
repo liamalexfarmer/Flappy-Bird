@@ -35,8 +35,15 @@ local groundscrollSpeed = SCROLL_SPEED
 --creating a local bird value based on the bird class
 local bird = Bird()
 
+local pipes = {}
+
+local spawnTimer = 0
+
+
 --establishing graphis formats, windo titles and screen setup parameters
 function love.load()
+	math.randomseed(os.time())
+
 	love.graphics.setDefaultFilter('nearest', 'nearest')
 	love.window.setTitle("No-Cappy Byrd")
 
@@ -85,9 +92,25 @@ function love.update(dt)
 	groundScroll = (groundScroll + groundscrollSpeed * dt)
 	% VIRTUAL_WIDTH
 
+	--define logic that creates a spawn timer counter
+	spawnTimer = spawnTimer + dt
+
+	--once 2 seconds elapses, create a pipe and reset the spawn timer
+	if spawnTimer > 3 then
+		table.insert(pipes, Pipe())
+		spawnTimer = 0
+	end
+
 	--executes the update functions defined in bird class
 	bird:update(dt)
 
+	for k, pipe in pairs(pipes) do
+		pipe:update(dt)
+
+		if pipe.x < -pipe.width then
+			table.remove(pipes, k)
+		end
+	end
 	--flushes the keys pressed table on update
 	love.keyboard.keysPressed = {}
 end
@@ -97,8 +120,16 @@ function love.draw()
 	--required for push utilization
 	push:start()
 
-	--calls upon moving variables defined above to enable scrolling
+	--draws background, calling upon moving variables defined above to enable scrolling
 	love.graphics.draw(background, -backgroundScroll, 0)
+
+	--renders all pipes that exist in pipes table
+	for k, pipe in pairs(pipes) do
+		pipe:render()
+	end
+
+
+	--draws background, calling upon variables  calculated above to enable scrolling
 	love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT-16)
 
 	--renders our bird on screen based on class parameters.
