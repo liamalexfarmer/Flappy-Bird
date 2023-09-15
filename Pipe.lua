@@ -5,27 +5,41 @@ Pipe = Class{}
 local PIPE_IMAGE = love.graphics.newImage('sprites/pipe.png')
 
 --define a scroll speed
-local PIPE_SCROLL = -60
+PIPE_SCROLL = -60
+
+PIPE_HEIGHT = 288
+PIPE_WIDTH = 70
 
 --
-function Pipe:init()
+function Pipe:init(orientation, y)
 	--sets it's x position to just outside the right most edge of the screen
-	self.x = VIRTUAL_WIDTH + 1
+	self.x = VIRTUAL_WIDTH
 
 	--sets is y position to a random point between two limits
-	self.y = math.random(VIRTUAL_HEIGHT * 3 / 8, VIRTUAL_HEIGHT * 6 / 8)
+	self.y = y
 
 	--defines the pipe width by the image width
 	self.width = PIPE_IMAGE:getWidth()
+	self.height = PIPE_HEIGHT
+
+	self.orientation = orientation
 
 end
 
 	--apply an update function to allow the pop to scroll
 function Pipe:update(dt)
-	self.x = self.x + PIPE_SCROLL * dt
+
 end
 
 --render the pipe and apply it's positional property
+--for reference: this syntax: self.orientation == 'top' and self.y + PIPE_HEIGHT or self.y 
+--basically means: IF self.orientation == 'top' then return self.y + PIPE_HEIGHT otherwise use self.y
+--useful technique to remember because it's not obvious
+--expectation would be an if/else sequence, but this almost functions as a short hand.
 function Pipe:render()
-	love.graphics.draw(PIPE_IMAGE, self.x, self.y)
+	--love.graphics.draw(drawable, x, y, rotation, scale x, scale y)
+	love.graphics.draw(PIPE_IMAGE, self.x, 
+		(self.orientation == 'top' and self.y + PIPE_HEIGHT or self.y), 
+		0, 1, self.orientation == 'top' and -1 or 1)
+		--this is the y scale factor. setting scale to -1 flips the orientation of a sprite
 end
