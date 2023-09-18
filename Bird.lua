@@ -20,6 +20,16 @@ function Bird:init()
 	self.dy = 0
 end
 
+function Bird:collides(pipe)
+	if (self.x + self.width - 2) >= pipe.x and self.x + 2 <= pipe.x + PIPE_WIDTH then
+		if (self.y + self.height - 2) >= pipe.y and self.y + 2 <= pipe.y + PIPE_HEIGHT then
+			return true
+		end
+	end
+
+	return false
+end
+
 --how the bird behaves over time
 function Bird:update(dt)
 	--enables the bird to constantly accelerate over time based on gravity

@@ -43,6 +43,8 @@ local spawnTimer = 0
 
 local lastY = -PIPE_HEIGHT + math.random(80) + 20
 
+local scrolling = true
+
 
 --establishing graphis formats, windo titles and screen setup parameters
 function love.load()
@@ -87,42 +89,49 @@ end
 
 --defines our games behavior over time
 function love.update(dt)
+	if scrolling then
 	--creates a moving X value for the background image that allows it to scroll over time
 	--modulo resets the X value close to 0 for continuous scrolling
-	backgroundScroll = (backgroundScroll + backgroundscrollSpeed * dt)
-	% BACKGROUND_LOOPING_POINT
+		backgroundScroll = (backgroundScroll + backgroundscrollSpeed * dt)
+		% BACKGROUND_LOOPING_POINT
 
 	--same principle as above but using the virtual width as a mechanism to reset the x point.
-	groundScroll = (groundScroll + groundscrollSpeed * dt)
-	% VIRTUAL_WIDTH
+		groundScroll = (groundScroll + groundscrollSpeed * dt)
+		% VIRTUAL_WIDTH
 
 	--define logic that creates a spawn timer counter
-	spawnTimer = spawnTimer + dt
+		spawnTimer = spawnTimer + dt
 
 	--once 3 seconds elapses, create a pair of pipes and reset the spawn timer
-	if spawnTimer > 3 then
-		local y = math.max(-PIPE_HEIGHT + 10,
-			math.min(lastY + math.random(-20,20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
-		lastY = y
+		if spawnTimer > 3 then
+			local y = math.max(-PIPE_HEIGHT + 20,
+				math.min(lastY + math.random(-20,20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
+			lastY = y
 
-		table.insert(pipePairs, PipePair(y))
-		spawnTimer = 0
-	end
+			table.insert(pipePairs, PipePair(y))
+			spawnTimer = 0
+		end
 
 	--executes the update functions defined in bird class
-	bird:update(dt)
+		bird:update(dt)
 
-	for k, pair in pairs(pipePairs) do
-		pair:update(dt)
-	end
-
-	for k, pair in pairs(pipePairs) do
-		if pair.remove then
-			table.remove(pipePairs, k)
+		for k, pair in pairs(pipePairs) do
+			pair:update(dt)
+			for l, pipe in pairs(pair.pipes) do
+				if bird:collides(pipe) then
+					scrolling = false
+				end
+			end
 		end
-	end
+
+		for k, pair in pairs(pipePairs) do
+			if pair.remove then
+				table.remove(pipePairs, k)
+			end
+		end
 	--flushes the keys pressed table on update
 	love.keyboard.keysPressed = {}
+	end
 end
 
 --graphics drawing functions
