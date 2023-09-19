@@ -14,6 +14,7 @@ require 'StateMachine'
 
 require 'states/BaseState'
 require 'states/PlayState'
+require 'states/ScoreState'
 require 'states/TitleScreenState'
 
 --setting and scaling dimentions of the game window
@@ -69,6 +70,7 @@ function love.load()
 	gStateMachine = StateMachine {
 		['title'] = function() return TitleScreenState() end,
 		['play'] = function() return PlayState() end,
+		['score'] = function() return ScoreState() end
 	}
 	gStateMachine:change('title')
 	--creating a table of pressed keys

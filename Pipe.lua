@@ -15,7 +15,7 @@ function Pipe:init(orientation, y)
 	--sets it's x position to just outside the right most edge of the screen
 	self.x = VIRTUAL_WIDTH
 
-	--sets is y position to a random point between two limits
+	--sets its y position to a random point between two limits
 	self.y = y
 
 	--defines the pipe width by the image width

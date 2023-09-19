@@ -14,6 +14,8 @@ function PipePair:init(y)
 	}
 	--defining a pipe as not ready to be removed
 	self.remove = false
+
+	self.scored = false
 end
 
 function PipePair:update(dt)
