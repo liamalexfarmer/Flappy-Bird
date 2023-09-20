@@ -1,17 +1,19 @@
 PauseState = Class{__includes = BaseState}
 
---logic that allows the state machine to enter the playstate
 
+--upon entering the pause state, pass important game state variables
+--in order to maintain progress. game restarts otherwise
 function PauseState:enter(params)
 	self.bird = params.bird
 	self.pipePairs = params.pipePairs
 	self.timer = params.timer
 	self.lastY = params.lastY
 	self.score = params.score
-	
+
 end
 
-
+--sets paused to true, which scrolling in main.lua uses to determine when to pause scrolling
+--then carries out the opposite of above, feeding stored variables back into the play state
 function PauseState:update(dt)
 	paused = true
 	if love.keyboard.wasPressed('r') then
@@ -26,17 +28,21 @@ function PauseState:update(dt)
 end
 
 --displays on-screen prompts until user enters play state
+--also renders pipes/bird in their fixes positions passed on through the game state change
 function PauseState:render()
-		
+	--render pipes	
 	for k, pair in pairs(self.pipePairs) do
 		pair:render()
 	end
 
+	--render score
 	love.graphics.setFont(flappyFont)
 	love.graphics.print('Score: '.. tostring(self.score), 8, 8)
 
+	--render bird
 	self.bird:render()
 
+	--paused and resumed messages while paused
 	love.graphics.setFont(hugeFont)
 	love.graphics.printf('GAME PAUSED', 0, VIRTUAL_HEIGHT/4, VIRTUAL_WIDTH, 'center')
 

@@ -3,7 +3,7 @@ push = require 'push'
 --enabling the usage of class
 Class = require 'class'
 
---requiring the bird class
+--requiring the various classes that comprise the game
 require 'Bird'
 
 require 'Pipe'
@@ -27,7 +27,7 @@ VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
 
 
---setting the background image, and defining the pixel value that separates it's loopability
+--setting the background image, and defining the pixel value that defines where it loops
 local background = love.graphics.newImage('sprites/background.png')
 local backgroundScroll = 0
 local BACKGROUND_LOOPING_POINT = 413
@@ -53,6 +53,7 @@ paused = false
 function love.load()
 	math.randomseed(os.time())
 
+	--alias filters and window title
 	love.graphics.setDefaultFilter('nearest', 'nearest')
 	love.window.setTitle("No-Cappy Byrd")
 
@@ -63,12 +64,14 @@ function love.load()
 	hugeFont = love.graphics.newFont('fonts/flappy.ttf', 56)
 	love.graphics.setFont(flappyFont)
 
+	--some push setup options marrying the virtual & physical widths
 	push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
 		vsync = true,
 		fullscreen = false,
 		resizable = true
 	})
 
+	--catalogging the different states our state machine will navigate
 	gStateMachine = StateMachine {
 		['title'] = function() return TitleScreenState() end,
 		['countdown'] = function() return CountdownState() end,
@@ -88,7 +91,7 @@ function love.resize(w, h)
 	push:resize(w, h)
 end
 
---
+--exit functionality
 function love.keypressed(key)
 	love.keyboard.keysPressed[key] = true
 	if key == 'escape' then
@@ -116,9 +119,6 @@ function love.update(dt)
 	--same principle as above but using the virtual width as a mechanism to reset the x point.
 		groundScroll = (groundScroll + groundscrollSpeed * dt)
 		% VIRTUAL_WIDTH
-		else
-			backgroundScroll = backgroundScroll
-			groundScroll = groundScroll
 		end
 
 
