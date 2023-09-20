@@ -20,6 +20,21 @@ function PlayState:init()
 	self.score = 0
 end
 
+function PlayState:enter(params)
+	paused = false
+	if params == nil then
+		PlayState:init()
+	else
+		self.bird = params.bird
+		self.pipePairs = params.pipePairs
+		self.timer = params.timer
+
+		self.lastY = params.lastY
+
+		self.score = params.score
+	end
+end
+
 function PlayState:update(dt)
 	self.timer = self.timer + dt
 
@@ -67,6 +82,16 @@ function PlayState:update(dt)
 
 	if self.bird.y + BIRD_HEIGHT > VIRTUAL_HEIGHT - 15 then
 		gStateMachine:change('score', {
+			score = self.score
+		})
+	end
+
+	if love.keyboard.wasPressed('p') then
+		gStateMachine:change('pause', {
+			bird = self.bird,
+			pipePairs = self.pipePairs,
+			timer = self.timer,
+			lastY = self.lastY,
 			score = self.score
 		})
 	end

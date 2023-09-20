@@ -17,6 +17,7 @@ require 'states/PlayState'
 require 'states/ScoreState'
 require 'states/TitleScreenState'
 require 'states/CountdownState'
+require 'states/PauseState'
 
 --setting and scaling dimentions of the game window
 WINDOW_WIDTH = 1280
@@ -72,7 +73,8 @@ function love.load()
 		['title'] = function() return TitleScreenState() end,
 		['countdown'] = function() return CountdownState() end,
 		['play'] = function() return PlayState() end,
-		['score'] = function() return ScoreState() end
+		['score'] = function() return ScoreState() end,
+		['pause'] = function() return PauseState() end
 	}
 	gStateMachine:change('title')
 
@@ -92,13 +94,6 @@ function love.keypressed(key)
 	if key == 'escape' then
 		love.event.quit()
 	end
-
-	if key == 'p' then
-		if paused == false then
-			paused = true
-		else paused = false
-		end
-	end
 end
 
 --creates a boolean response based on keys pressed
@@ -112,7 +107,7 @@ end
 
 --defines our games behavior over time
 function love.update(dt)
-	if paused == false then
+		if paused == false then
 	--creates a moving X value for the background image that allows it to scroll over time
 	--modulo resets the X value close to 0 for continuous scrolling
 		backgroundScroll = (backgroundScroll + backgroundscrollSpeed * dt)
@@ -121,13 +116,14 @@ function love.update(dt)
 	--same principle as above but using the virtual width as a mechanism to reset the x point.
 		groundScroll = (groundScroll + groundscrollSpeed * dt)
 		% VIRTUAL_WIDTH
+		else
+			backgroundScroll = backgroundScroll
+			groundScroll = groundScroll
+		end
+
 
 	--update gamestate machine
 		gStateMachine:update(dt)
-	else 
-		backgroundScroll = backgroundScroll
-		groundScroll = groundScroll
-	end
 
 	--flushes the keys pressed table on update
 	love.keyboard.keysPressed = {}

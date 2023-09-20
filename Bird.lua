@@ -32,9 +32,6 @@ end
 
 --how the bird behaves over time
 function Bird:update(dt)
-	if paused == true then
-		self.dy = 0
-	else
 	--enables the bird to constantly accelerate over time based on gravity
 		self.dy = self.dy + GRAVITY * dt
 
@@ -45,7 +42,6 @@ function Bird:update(dt)
 
 	--injects our y axis acceleration parameters into the birds y positioning
 		self.y = self.y + self.dy
-	end
 end
 
 --renders the bird based on it's defined parameters
