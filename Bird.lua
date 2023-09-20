@@ -32,16 +32,20 @@ end
 
 --how the bird behaves over time
 function Bird:update(dt)
+	if paused == true then
+		self.dy = 0
+	else
 	--enables the bird to constantly accelerate over time based on gravity
-	self.dy = self.dy + GRAVITY * dt
+		self.dy = self.dy + GRAVITY * dt
 
 	--performs a jump if spacebard was pressed--makes it momentary
-	if love.keyboard.wasPressed('space') then
-		self.dy = -GRAVITY/4
-	end
+		if love.keyboard.wasPressed('space') then
+			self.dy = -GRAVITY/4
+		end
 
 	--injects our y axis acceleration parameters into the birds y positioning
-	self.y = self.y + self.dy
+		self.y = self.y + self.dy
+	end
 end
 
 --renders the bird based on it's defined parameters

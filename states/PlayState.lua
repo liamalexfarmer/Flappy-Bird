@@ -7,6 +7,9 @@ PIPE_HEIGHT = 288
 BIRD_WIDTH = 38
 BIRD_HEIGHT = 24
 
+--since we have a countdown, create pipes immediately rather than waiting 3 seconds
+timerCount = -1
+
 function PlayState:init()
 	self.bird = Bird()
 	self.pipePairs = {}
@@ -20,14 +23,15 @@ end
 function PlayState:update(dt)
 	self.timer = self.timer + dt
 
-	if self.timer > 3 then
-		local y = math.max(-PIPE_HEIGHT + 10, 
-			math.min(self.lastY + math.random(-20, 20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
+	if self.timer > timerCount then
+		local y = math.max(-PIPE_HEIGHT + 30, 
+			math.min(self.lastY + math.random(-50, 50), VIRTUAL_HEIGHT - 30 - PIPE_HEIGHT))
 		self.lastY = y
 
 		table.insert(self.pipePairs, PipePair(y))
 
 		self.timer = 0
+		timerCount = math.max(math.random(2, 4))
 	end
 
 	for k, pair in pairs(self.pipePairs) do
@@ -56,6 +60,7 @@ function PlayState:update(dt)
 				gStateMachine:change('score', {
 					score = self.score
 				})
+				timerCount = -1
 			end
 		end
 	end

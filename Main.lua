@@ -16,6 +16,7 @@ require 'states/BaseState'
 require 'states/PlayState'
 require 'states/ScoreState'
 require 'states/TitleScreenState'
+require 'states/CountdownState'
 
 --setting and scaling dimentions of the game window
 WINDOW_WIDTH = 1280
@@ -44,7 +45,7 @@ local groundscrollSpeed = SCROLL_SPEED
 --creating a local bird value based on the bird class
 local bird = Bird()
 
-local scrolling = true
+paused = false
 
 
 --establishing graphis formats, windo titles and screen setup parameters
@@ -69,10 +70,12 @@ function love.load()
 
 	gStateMachine = StateMachine {
 		['title'] = function() return TitleScreenState() end,
+		['countdown'] = function() return CountdownState() end,
 		['play'] = function() return PlayState() end,
 		['score'] = function() return ScoreState() end
 	}
 	gStateMachine:change('title')
+
 	--creating a table of pressed keys
 	love.keyboard.keysPressed = {}
 end
@@ -86,9 +89,15 @@ end
 --
 function love.keypressed(key)
 	love.keyboard.keysPressed[key] = true
-
 	if key == 'escape' then
 		love.event.quit()
+	end
+
+	if key == 'p' then
+		if paused == false then
+			paused = true
+		else paused = false
+		end
 	end
 end
 
@@ -103,7 +112,7 @@ end
 
 --defines our games behavior over time
 function love.update(dt)
-	
+	if paused == false then
 	--creates a moving X value for the background image that allows it to scroll over time
 	--modulo resets the X value close to 0 for continuous scrolling
 		backgroundScroll = (backgroundScroll + backgroundscrollSpeed * dt)
@@ -115,9 +124,14 @@ function love.update(dt)
 
 	--update gamestate machine
 		gStateMachine:update(dt)
+	else 
+		backgroundScroll = backgroundScroll
+		groundScroll = groundScroll
+	end
 
 	--flushes the keys pressed table on update
 	love.keyboard.keysPressed = {}
+
 
 end
 
