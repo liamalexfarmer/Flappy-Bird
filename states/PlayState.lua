@@ -53,7 +53,7 @@ function PlayState:update(dt)
 	--subtraction of 150 is maximum gap height (120) + 30 pixel cushion to prevent off-screen bottom pipes
 	if self.timer > timerCount then
 		local y = math.max(-PIPE_HEIGHT + 30, 
-			math.min(self.lastY + math.random(-50, 50), VIRTUAL_HEIGHT - PIPE_HEIGHT - 150))
+			math.min(self.lastY + math.random(-40, 40), VIRTUAL_HEIGHT - PIPE_HEIGHT - 160))
 		self.lastY = y
 
 		--adds a pair of pipes to the PipePairs table
