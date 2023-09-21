@@ -10,6 +10,8 @@ COUNTDOWN_TIME = 1
 function CountdownState:init()
 	self.count = 3
 	self.timer = 0
+	--plays a countdown sound on init (3)
+	sounds.oneTwo:play()
 end
 
 --the countdown sequence
@@ -18,6 +20,8 @@ function CountdownState:update(dt)
 	self.timer = self.timer + dt
 	--checks self.timer against countdown time
 	if self.timer > COUNTDOWN_TIME then
+		--plays the countdown sound the same as above for (2) and (1)
+		sounds.oneTwo:play()
 		--if it reaches the countdown time, set it to zero effectively (remainder of countdown time / countdown time, which has no remainder)
 		--obviously this whole sequence could be less cumbersome if countdown time was simply 1 second, but it's a nice feature
 		self.timer = self.timer % COUNTDOWN_TIME
@@ -27,11 +31,13 @@ function CountdownState:update(dt)
 		--if the count reaches zero, start the game
 		if self.count == 0 then
 			gStateMachine:change('play')
+			--plays a slightly different countdown sound on 'GO' to signify the start of the game
+			sounds.three:play()
 		end
 	end
 end
 
-
+--prints the countdown on the center of the screen in big font
 function CountdownState:render()
 	love.graphics.setFont(hugeFont)
 	love.graphics.printf(tostring(self.count), 0, 120, VIRTUAL_WIDTH, 'center')

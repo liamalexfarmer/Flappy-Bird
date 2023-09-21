@@ -49,6 +49,8 @@ local bird = Bird()
 paused = false
 
 
+
+
 --establishing graphis formats, windo titles and screen setup parameters
 function love.load()
 	math.randomseed(os.time())
@@ -64,12 +66,34 @@ function love.load()
 	hugeFont = love.graphics.newFont('fonts/flappy.ttf', 56)
 	love.graphics.setFont(flappyFont)
 
+
 	--some push setup options marrying the virtual & physical widths
 	push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
 		vsync = true,
 		fullscreen = false,
 		resizable = true
 	})
+
+	--initialize sounds
+	sounds = {
+		['oneTwo'] = love.audio.newSource('sounds/1-2.wav', 'static'),
+		['three'] = love.audio.newSource('sounds/3.wav', 'static'),
+		['groundCollide'] = love.audio.newSource('sounds/GroundCollide.wav', 'static'),
+		['pause'] = love.audio.newSource('sounds/Pause.wav', 'static'),
+		['pipeCollide'] = love.audio.newSource('sounds/PipeCollide.wav', 'static'),
+		['resume'] = love.audio.newSource('sounds/Resume.wav', 'static'),
+		['sadBird'] = love.audio.newSource('sounds/SadBird.wav', 'static'),
+		['score'] = love.audio.newSource('sounds/Score.wav', 'static'),
+		['thud'] = love.audio.newSource('sounds/Thud.wav', 'static'),
+		['bronze'] = love.audio.newSource('sounds/bronze.mp3', 'static'),
+		['silver'] = love.audio.newSource('sounds/silver.mp3', 'static'),
+		['gold'] = love.audio.newSource('sounds/gold.mp3', 'static'),
+		['music'] = love.audio.newSource('sounds/8bitmusic.mp3', 'static')
+	}
+
+	--start & loop the background music
+	sounds.music:setLooping(true)
+	sounds.music:play()
 
 	--catalogging the different states our state machine will navigate
 	gStateMachine = StateMachine {
@@ -110,13 +134,14 @@ end
 
 --defines our games behavior over time
 function love.update(dt)
+		--only scrolls when the game isn't in the pause state
 		if paused == false then
-	--creates a moving X value for the background image that allows it to scroll over time
-	--modulo resets the X value close to 0 for continuous scrolling
+		--creates a moving X value for the background image that allows it to scroll over time
+		--modulo resets the X value close to 0 for continuous scrolling
 		backgroundScroll = (backgroundScroll + backgroundscrollSpeed * dt)
 		% BACKGROUND_LOOPING_POINT
 
-	--same principle as above but using the virtual width as a mechanism to reset the x point.
+		--same principle as above but using the virtual width as a mechanism to reset the x point.
 		groundScroll = (groundScroll + groundscrollSpeed * dt)
 		% VIRTUAL_WIDTH
 		end

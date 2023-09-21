@@ -10,6 +10,8 @@ function PauseState:enter(params)
 	self.lastY = params.lastY
 	self.score = params.score
 
+	--plays a designated sound upon entering the pause state
+	sounds.pause:play()
 end
 
 --sets paused to true, which scrolling in main.lua uses to determine when to pause scrolling
@@ -25,6 +27,11 @@ function PauseState:update(dt)
 			score = self.score
 		})
 	end
+end
+
+function PauseState:exit()
+	--plays a resume sound when exiting the pause state
+	sounds.resume:play()
 end
 
 --displays on-screen prompts until user enters play state

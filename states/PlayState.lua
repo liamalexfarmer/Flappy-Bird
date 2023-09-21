@@ -24,6 +24,9 @@ function PlayState:enter(params)
 	--resumes the parralax scrolling by re-establishing a non-paused state
 	paused = false
 
+	--sets the timer to -1 so a pipe spawns immediately as the play state enters
+	timerCount = -1
+
 	--only passes parameters if they exist, otherwise ignores these instructions
 	--added this since starting the game for the first time was throwing an error
 	--because this variable transfer is only relevant when changing FROM pause TO play states
@@ -66,6 +69,8 @@ function PlayState:update(dt)
 		if not pair.scored then
 			if pair.x + PIPE_WIDTH < self.bird.x then
 				self.score = self.score + 1
+				--play the score sound every time a score is registered
+				sounds.score:play()
 				pair.scored = true
 			end
 		end
@@ -85,13 +90,14 @@ function PlayState:update(dt)
 	self.bird:update(dt)
 
 	--collision arithmetic defined in bird class
-	--timer count resets to -1 so that the new game starts immediately
 	--pass through score variable on state change
 	for k, pair in pairs(self.pipePairs) do
 		for l, pipe in pairs(pair.pipes) do
 			if self.bird:collides(pipe) then
-
-				timerCount = -1
+				--collection of sounds that plays on a pipe collision
+				sounds.pipeCollide:play()
+				sounds.sadBird:play()
+				sounds.thud:play()
 
 				gStateMachine:change('score', {
 					score = self.score
@@ -102,10 +108,11 @@ function PlayState:update(dt)
 	end
 
 	--death by hitting the ground
-	--timercount reset present as well, for the same reasons
 	if self.bird.y + BIRD_HEIGHT > VIRTUAL_HEIGHT - 15 then
-
-		timerCount = -1
+		--collection of sounds that play on a ground collision. same as pipe save for 1 sound
+		sounds.groundCollide:play()
+		sounds.sadBird:play()
+		sounds.thud:play()
 
 		gStateMachine:change('score', {
 			score = self.score

@@ -1,7 +1,7 @@
 StateMachine = Class{}
 
 
---creates series of functions that allow the state machine to operate
+--creates series of functions that allow the state machine to define operation functions
 function StateMachine:init(states)
 	self.empty = {
 		render = function() end,
@@ -14,8 +14,14 @@ function StateMachine:init(states)
 end
 
 --defining some functions to carry out state changes and pass variables between states
+--for my future reference:
+--brilliance of this machine is that you can define an exit function when LEAVING a specific state
+--you then RE-DEFINE the state to the state initiated by the state change
+--you then also have an entrance function when ARRIVING at a state
+--sequence defined here is essentially:
+--CARRY OUT CURRENT STATE EXIT FUNCTION -> SWITCH TO NEW SPECIFIED STATE -> CARRY OUT NEW STATE ENTER FUNCTION
 function StateMachine:change(stateName, enterParams)
-	assert(self.states[stateName]) -- state must exist
+	assert(self.states[stateName]) -- checks to see whether the state exists
 	self.current:exit()
 	self.current = self.states[stateName]()
 	self.current:enter(enterParams)

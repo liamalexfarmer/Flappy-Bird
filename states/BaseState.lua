@@ -1,3 +1,4 @@
+--basic properties that can be easily injected into every game state to get started
 BaseState = Class{}
 
 function BaseState:init() end

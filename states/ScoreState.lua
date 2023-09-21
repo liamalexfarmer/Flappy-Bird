@@ -26,10 +26,13 @@ function ScoreState:enter(params)
 	--and provides easy adjustable difficulty implementation down the road
 	if self.score >= BRONZE_SCORE and self.score < SILVER_SCORE then
 		self.award = medals.bronze
+		sounds.bronze:play()
 	elseif self.score >= SILVER_SCORE and self.score < GOLD_SCORE then
 		self.award = medals.silver
+		sounds.silver:play()
 	elseif self.score >= GOLD_SCORE then
 		self.award = medals.gold
+		sounds.gold:play()
 	else 
 		self.award = nil
 	end
