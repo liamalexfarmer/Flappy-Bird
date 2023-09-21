@@ -37,6 +37,11 @@ function CountdownState:update(dt)
 	end
 end
 
+--ensures we have a pipe spawn as soon as the countdown state transitions into the play state
+function CountdownState:exit()
+	timerCount = -1
+end
+
 --prints the countdown on the center of the screen in big font
 function CountdownState:render()
 	love.graphics.setFont(hugeFont)

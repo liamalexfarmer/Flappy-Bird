@@ -14,7 +14,10 @@ local GRAVITY = 20
 		['jump7'] = love.audio.newSource('sounds/jumps/Jump7.wav', 'static'),
 		['jump8'] = love.audio.newSource('sounds/jumps/Jump8.wav', 'static')
 	}
-
+	--reducing the volume of the sounds in the array so they aren't so annoying
+	for k, jumps in pairs(jumpSounds) do
+		jumpSounds[k]:setVolume(0.5)
+	end
 
 --this creates a new array providing numerical keys to the table above
 --useful logic to remember/document

@@ -6,8 +6,7 @@ PIPE_HEIGHT = 288
 
 BIRD_WIDTH = 38
 BIRD_HEIGHT = 24
-timerCount = -1
---since we have a countdown, create pipes immediately rather than waiting 3 seconds using -1
+
 
 --initiate variables and tables to establish functionality
 function PlayState:init()
@@ -18,6 +17,9 @@ function PlayState:init()
 	self.lastY = -PIPE_HEIGHT + math.random(80) + 20
 
 	self.score = 0
+
+	--since there is a countdown, create pipes immediately rather than waiting 3 seconds using -1
+	timerCount = -1
 end
 
 function PlayState:enter(params)
@@ -25,7 +27,6 @@ function PlayState:enter(params)
 	paused = false
 
 	--sets the timer to -1 so a pipe spawns immediately as the play state enters
-	timerCount = -1
 
 	--only passes parameters if they exist, otherwise ignores these instructions
 	--added this since starting the game for the first time was throwing an error

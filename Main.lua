@@ -93,6 +93,7 @@ function love.load()
 
 	--start & loop the background music
 	sounds.music:setLooping(true)
+	sounds.music:setVolume(0.5)
 	sounds.music:play()
 
 	--catalogging the different states our state machine will navigate

@@ -26,13 +26,10 @@ function ScoreState:enter(params)
 	--and provides easy adjustable difficulty implementation down the road
 	if self.score >= BRONZE_SCORE and self.score < SILVER_SCORE then
 		self.award = medals.bronze
-		sounds.bronze:play()
 	elseif self.score >= SILVER_SCORE and self.score < GOLD_SCORE then
 		self.award = medals.silver
-		sounds.silver:play()
 	elseif self.score >= GOLD_SCORE then
 		self.award = medals.gold
-		sounds.gold:play()
 	else 
 		self.award = nil
 	end
@@ -62,6 +59,15 @@ function ScoreState:render()
 		love.graphics.setFont(flappyFont)
 		love.graphics.printf("YOU EARNED A MEDAL!", 0, VIRTUAL_HEIGHT/5, VIRTUAL_WIDTH, 'center')
 		love.graphics.draw(self.award, (VIRTUAL_WIDTH / 2) - (MEDAL_WIDTH / 2), VIRTUAL_HEIGHT / 2)
+
+		--play a sound based on the award
+		if self.award == medals.bronze then
+			sounds.bronze:play()
+		elseif self.award == medals.silver then
+			sounds.silver:play()
+		elseif self.award == medals.gold then
+			sounds.gold:play()
+		end
 	else
 		--smack talking the player if they don't earn a medal for cappin'
 		love.graphics.setFont(flappyFont)
